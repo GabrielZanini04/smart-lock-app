@@ -1,50 +1,89 @@
-# Welcome to your Expo app 👋
+# Smart Lock App 📱🔒
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Este é o aplicativo mobile (Front-end) do sistema de Fechadura Inteligente. Ele foi desenvolvido com **React Native** e **Expo**, permitindo que os usuários destranquem a porta utilizando a aproximação de tags **NFC** ou validação por **Reconhecimento Facial**.
 
-## Get started
+Este projeto consome a API RESTful fornecida pelo [smart-lock-backend](https://github.com/GabrielZanini04/smart-lock-backend).
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 🛠️ Tecnologias Utilizadas
 
-2. Start the app
+- **React Native / Expo:** Framework principal para desenvolvimento mobile.
+- **React Navigation:** Gerenciamento de rotas e fluxo de telas.
+- **Axios:** Cliente HTTP para comunicação com a API.
+- **Expo Camera:** Captura de imagem para reconhecimento biométrico.
+- **React Native NFC Manager:** Leitura e detecção de tags NFC.
+- **Expo SecureStore:** Armazenamento criptografado do token de autenticação (JWT/Sanctum).
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## ⚙️ Pré-requisitos
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Antes de começar, você precisará ter instalado em sua máquina:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- [Node.js](https://nodejs.org/en/)
+- [Git](https://git-scm.com/)
+- Aplicativo **Expo Go** instalado no seu celular físico (disponível na App Store ou Google Play).
+- O backend `smart-lock-backend` rodando localmente (ex: via **Laragon**).
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🚀 Como instalar e rodar o projeto
+
+### 1. Clonar o repositório
 
 ```bash
-npm run reset-project
+git clone [https://github.com/GabrielZanini04/smart-lock-app.git](https://github.com/GabrielZanini04/smart-lock-app.git)
+cd smart-lock-app
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Instalar as dependências
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3. Configurar a conexão com a API (_MUITO IMPORTANTE_)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Como o aplicativo rodará no seu celular físico, ele não consegue acessar localhost ou domínios locais do Laragon (como http://smart-lock-backend.test).
 
-## Join the community
+Você precisa configurar o IP da sua máquina na rede Wi-Fi:
 
-Join our community of developers creating universal apps.
+Descubra o seu endereço IPv4 local (no Windows, abra o CMD e digite ipconfig).
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Abra o arquivo src/services/api.js.
+
+Altere a baseURL colocando o seu IP. Exemplo:
+
+```JavaScript
+const api = axios.create({
+  // Substitua 192.168.x.x pelo seu IP real
+  baseURL: '[http://192.168.1.15/smart-lock-backend/public/api](http://192.168.1.15/smart-lock-backend/public/api)',
+});
+```
+
+### 4. Iniciar o servidor do Expo
+
+```Bash
+npx expo start
+```
+
+Após rodar o comando, um QR Code aparecerá no seu terminal.
+
+### 5. Testar no Celular
+
+Certifique-se de que o seu celular e o seu computador estão conectados na mesma rede Wi-Fi.
+
+Abra o aplicativo Expo Go no seu celular.
+
+Escaneie o QR Code exibido no terminal do computador.
+
+O aplicativo será carregado no seu dispositivo.
+
+## ⚠️ Observações para Testes (Hardware)
+
+**Leitor NFC**: A leitura de tags NFC não funciona em emuladores de computador (Android Studio/Xcode). Para testar o fluxo da tela de NFC, é obrigatório rodar o aplicativo em um celular físico compatível com a tecnologia.
+
+**Câmera**: O aplicativo solicitará permissão de uso da câmera frontal na primeira vez que a tela de Reconhecimento Facial for aberta. Permita o acesso para capturar a biometria.
+
+**Autenticação**: O login só funcionará se o banco de dados do seu backend estiver rodando e com as rotas de API acessíveis pelo IP configurado no passo 3.
